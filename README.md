@@ -7,11 +7,11 @@
 # Usage
 <!-- usage -->
 ```sh-session
-$ npm install -g subrina-node
+$ npm install -g @subrina-protocol/subrina-node
 $ subrina COMMAND
 running command...
 $ subrina (--version)
-subrina-node/0.0.0 linux-x64 node-v16.14.0
+0.1.0
 $ subrina --help [COMMAND]
 USAGE
   $ subrina COMMAND
