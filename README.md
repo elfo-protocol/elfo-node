@@ -1,21 +1,10 @@
 # Elfo Node CLI
 Nodes on elfo protocol can earn fees by monitoring and triggering payments.
 
-Follow these steps to get started.
-
-- Install Node CLI
-- Run `elfo config` configure your node
-- Run `elfo register` command to register your node
-- Run `elfo monitor` command to monitor subscriptions and get paid in fees
-
-<!-- toc -->
-* [Usage](#usage)
-* [Commands](#commands)
-<!-- tocstop -->
 # Usage
 <!-- usage -->
 ```sh-session
-$ npm install -g @elfo-protocol/elfo-node
+$ npm install -g @elfo/node
 $ elfo COMMAND
 running command...
 $ elfo (--version)
@@ -25,6 +14,7 @@ USAGE
   $ elfo COMMAND
 ...
 ```
+![Install cli](./images/install.gif "Installation")
 <!-- usagestop -->
 # Commands
 <!-- commands -->
@@ -46,6 +36,7 @@ DESCRIPTION
 EXAMPLES
   $ elfo config
 ```
+![Config node](./images/config.gif "Configure")
 
 ## `elfo register`
 
@@ -66,6 +57,7 @@ EXAMPLES
 
   $ elfo register --force
 ```
+![Register node](./images/register.gif "Register")
 
 ## `elfo monitor`
 
