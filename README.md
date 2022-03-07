@@ -1,4 +1,12 @@
 # Subrina Node CLI
+Nodes on subrina protocol can earn fees by monitoring and triggering payments.
+
+Follow these steps to get started.
+
+- Install Node CLI
+- Run `subrina config` configure your node
+- Run `subrina register` command to register your node
+- Run `subrina monitor` command to monitor subscriptions and get paid in fees
 
 <!-- toc -->
 * [Usage](#usage)

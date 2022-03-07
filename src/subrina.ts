@@ -13,7 +13,9 @@ export const run = async () => {
     .command('register', 'register node', {
       executableFile: join(__dirname, 'commands', 'register.js'),
     })
-    .command('monitor', 'monitor subscription')
+    .command('monitor', 'monitor subscription', {
+      executableFile: join(__dirname, 'commands', 'monitor', 'command.js'),
+    })
     .command('init', 'init protocol', {
       executableFile: join(__dirname, 'commands', 'init.js'),
       hidden: true,
