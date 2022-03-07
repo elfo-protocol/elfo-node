@@ -309,10 +309,10 @@
   resolved "https://registry.npmjs.org/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@elfo/sdk@0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@elfo/sdk/-/sdk-0.0.1.tgz#3749289f4b242ed4c7ec84f403efa563c4acba86"
-  integrity sha512-db02NIJolPtcDWBTuQ4s3fm3F153LI/x9xp2q7c38tyc8JNVas57aO8hG3llCNcIPcXmo4V8XZEL+Zw0vr2DJw==
+"@elfo/sdk@^0.0.3":
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/@elfo/sdk/-/sdk-0.0.3.tgz#fdb3afefb283208592075d6037e4a2dfa5102262"
+  integrity sha512-tSd8JuZddzp8AaVJgfOL3stt7a7iJ8dKkjPB3dCReiFOV1nERMg9AmrjUOfJHIlRpiy0KIQ+45yy4U49DogSJw==
   dependencies:
     "@project-serum/anchor" "^0.22.1"
     "@solana/spl-token" "^0.2.0"
