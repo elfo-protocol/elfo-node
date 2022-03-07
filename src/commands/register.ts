@@ -7,7 +7,7 @@ import { writeConfig } from '../config/index';
 import { register } from '../connection/index';
 
 const program = new Command();
-program.description('register subrina node');
+program.description('register elfo node');
 program.option('-d, --debug', 'output extra debugging');
 program.option('-f, --force', 'force re-register');
 
@@ -20,7 +20,7 @@ const tasks = new Listr([
       const configExists = configPathExists();
       if (!configExists)
         throw new Error(
-          'Subrina is not configured. Please run `subrina config` first.',
+          'Elfo is not configured. Please run `elfo config` first.',
         );
       ctx.config = await getConfig();
     },

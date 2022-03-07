@@ -11,7 +11,7 @@ export interface NodeConfig {
 }
 
 export const getConfigPath = () => {
-  return join(homedir(), '.config', 'subrina', 'config.json');
+  return join(homedir(), '.config', 'elfo', 'config.json');
 };
 
 export const configPathExists = () => {

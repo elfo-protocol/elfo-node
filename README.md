@@ -1,12 +1,12 @@
-# Subrina Node CLI
-Nodes on subrina protocol can earn fees by monitoring and triggering payments.
+# Elfo Node CLI
+Nodes on elfo protocol can earn fees by monitoring and triggering payments.
 
 Follow these steps to get started.
 
 - Install Node CLI
-- Run `subrina config` configure your node
-- Run `subrina register` command to register your node
-- Run `subrina monitor` command to monitor subscriptions and get paid in fees
+- Run `elfo config` configure your node
+- Run `elfo register` command to register your node
+- Run `elfo monitor` command to monitor subscriptions and get paid in fees
 
 <!-- toc -->
 * [Usage](#usage)
@@ -15,65 +15,65 @@ Follow these steps to get started.
 # Usage
 <!-- usage -->
 ```sh-session
-$ npm install -g @subrina-protocol/subrina-node
-$ subrina COMMAND
+$ npm install -g @elfo-protocol/elfo-node
+$ elfo COMMAND
 running command...
-$ subrina (--version)
+$ elfo (--version)
 0.1.0
-$ subrina --help [COMMAND]
+$ elfo --help [COMMAND]
 USAGE
-  $ subrina COMMAND
+  $ elfo COMMAND
 ...
 ```
 <!-- usagestop -->
 # Commands
 <!-- commands -->
-* [`subrina config`](#subrina-config)
-* [`subrina register`](#subrina-register)
-* [`subrina monitor`](#subrina-monitor)
+* [`elfo config`](#elfo-config)
+* [`elfo register`](#elfo-register)
+* [`elfo monitor`](#elfo-monitor)
 
-## `subrina config`
+## `elfo config`
 
-configure subrina node
+configure elfo node
 
 ```
 USAGE
-  $ subrina config
+  $ elfo config
 
 DESCRIPTION
-  configure subrina node
+  configure elfo node
 
 EXAMPLES
-  $ subrina config
+  $ elfo config
 ```
 
-## `subrina register`
+## `elfo register`
 
-register subrina node
+register elfo node
 
 ```
 USAGE
-  $ subrina register [-f]
+  $ elfo register [-f]
 
 FLAGS
   -f, --force  force re-register
 
 DESCRIPTION
-  register subrina node
+  register elfo node
 
 EXAMPLES
-  $ subrina register
+  $ elfo register
 
-  $ subrina register --force
+  $ elfo register --force
 ```
 
-## `subrina monitor`
+## `elfo monitor`
 
 monitor subscription plans and trigger payments
 
 ```
 USAGE
-  $ subrina monitor [-l <value>] [-s <value>]
+  $ elfo monitor [-l <value>] [-s <value>]
 
 FLAGS
   -l, --list=<value>    a txt file with a list of subscription plan account public keys
@@ -83,11 +83,11 @@ DESCRIPTION
   monitor a list of subscription plans and trigger payments
 
 EXAMPLES
-  $ subrina monitor --list ~/subscriptin-plans-to-monitor.txt
+  $ elfo monitor --list ~/subscriptin-plans-to-monitor.txt
 
-  $ subrina monitor --single BJwb4SgNxDL9se5ZzZJ58ub9Adcj2XNfRs8GgVXKybyu
+  $ elfo monitor --single BJwb4SgNxDL9se5ZzZJ58ub9Adcj2XNfRs8GgVXKybyu
 
-  $ subrina monitor
+  $ elfo monitor
 ```
 
 <!-- commandsstop -->

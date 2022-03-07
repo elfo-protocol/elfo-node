@@ -29,7 +29,7 @@ const tasks = new Listr([
       const configExists = configPathExists();
       if (!configExists)
         throw new Error(
-          'Subrina is not configured. Please run `subrina config` first.',
+          'Elfo is not configured. Please run `elfo config` first.',
         );
       ctx.config = await getConfig();
     },

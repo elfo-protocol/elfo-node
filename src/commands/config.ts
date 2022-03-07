@@ -4,7 +4,7 @@ import { prompt } from 'inquirer';
 import { runConfiguration } from '../config/index';
 
 const program = new Command();
-program.description('configure subrina node');
+program.description('configure elfo node');
 program.option('-d, --debug', 'output extra debugging');
 const options = program.opts();
 
@@ -34,7 +34,7 @@ program
     action()
       .then(() => {
         console.log(
-          'Configuration success. Run `subrina register` to register the node.',
+          'Configuration success. Run `elfo register` to register the node.',
         );
       })
       .catch((e) => {

@@ -3,11 +3,11 @@ import { Provider, Wallet } from '@project-serum/anchor';
 import { NodeConfig } from '../config';
 import { Connection, Keypair, PublicKey } from '@solana/web3.js';
 import { ENDPOINT } from './constants';
-import { registerNode, triggerPayment as trigger } from '@subrina-protocol/sdk';
-import { _initalizeProtocol } from '@subrina-protocol/sdk';
-import { Subscription } from '@subrina-protocol/sdk';
-import { SubscriptionPlan } from '@subrina-protocol/sdk';
-import { ProtocolState } from '@subrina-protocol/sdk';
+import { registerNode, triggerPayment as trigger } from '@elfo/sdk';
+import { _initalizeProtocol } from '@elfo/sdk';
+import { Subscription } from '@elfo/sdk';
+import { SubscriptionPlan } from '@elfo/sdk';
+import { ProtocolState } from '@elfo/sdk';
 
 let _provider: Provider | undefined;
 let _keyPair: Keypair | undefined;

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 const path = require('path')
-const project = path.join(__dirname, '..', 'dist', 'src', 'subrina.js')
+const project = path.join(__dirname, '..', 'dist', 'src', 'elfo.js')
 
 const entry = require(project.toString());
 

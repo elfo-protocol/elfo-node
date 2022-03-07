@@ -4,10 +4,10 @@ import { join } from 'path';
 const program = new Command();
 
 export const run = async () => {
-  program.name('subrina').description('subrina protocol CLI').version('0.1.0');
+  program.name('elfo').description('elfo protocol CLI').version('0.1.0');
 
   program
-    .command('config', 'configure subrina node', {
+    .command('config', 'configure elfo node', {
       executableFile: join(__dirname, 'commands', 'config.js'),
     })
     .command('register', 'register node', {

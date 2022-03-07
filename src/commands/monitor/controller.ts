@@ -5,9 +5,9 @@ import { getSubscription } from '../../connection/index';
 import { NodeConfig } from '../../config/index';
 import { triggerPayment } from '../../connection/index';
 import { ListrTask } from 'listr';
-import { Subscription } from '@subrina-protocol/sdk';
+import { Subscription } from '@elfo/sdk';
 import { getSubscriptionPlan } from '../../connection/index';
-import { SubscriptionPlan } from '@subrina-protocol/sdk';
+import { SubscriptionPlan } from '@elfo/sdk';
 
 export const monitorSubscriptionPlanTask = (
   subscriptionPlanKey: PublicKey,
