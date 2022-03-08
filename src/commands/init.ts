@@ -41,10 +41,7 @@ program
   .action(() => {
     action()
       .then(() => {
-        console.log('Registration successful. ');
-        console.log(
-          'You can now monitor subscription plans, trigger payments and earn fees.',
-        );
+        console.log('Init successful.');
       })
       .catch((e) => {
         console.log('An error occurred.');
