@@ -8,6 +8,34 @@ import { ListrTask } from 'listr';
 import { Subscription } from '@elfo/sdk';
 import { getSubscriptionPlan } from '../../connection/index';
 import { SubscriptionPlan } from '@elfo/sdk';
+import Listr from 'listr';
+import * as fs from 'fs-extra';
+import { getProtocolState } from '../../connection/index';
+import { getConfig } from '../../config/index';
+
+let subscriptionPlanList: PublicKey[] | undefined = undefined;
+
+export const getSubscriptionPlanList = async (
+  type: 'single' | 'list' | 'all',
+  value: string | undefined,
+) => {
+  if (type == 'single' && !subscriptionPlanList) {
+    subscriptionPlanList = [new PublicKey(value as string)];
+  } else if (type == 'list' && !subscriptionPlanList) {
+    const fileExists = await fs.pathExists(value);
+    if (!fileExists) throw new Error(`File ${value} does not exist.`);
+    subscriptionPlanList = fs
+      .readFile(value)
+      .toString()
+      .split('\n')
+      .map((key) => new PublicKey(key));
+  } else {
+    const nodeConfig = await getConfig();
+    const protocol = await getProtocolState(nodeConfig);
+    subscriptionPlanList = protocol.subscriptionPlanAccounts;
+  }
+  return subscriptionPlanList;
+};
 
 export const monitorSubscriptionPlanTask = (
   subscriptionPlanKey: PublicKey,
@@ -46,7 +74,7 @@ export const monitorSubscriptionPlanTask = (
           monitorSubscriptionTask(subscriptionKey, nodeConfig, debug),
       );
 
-      return subscriptionTaskList;
+      return new Listr(subscriptionTaskList);
     },
   };
   return task;

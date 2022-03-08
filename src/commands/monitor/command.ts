@@ -3,12 +3,11 @@ import { configPathExists } from '../../config/index';
 import Listr from 'listr';
 import { getConfig } from '../../config/index';
 import { NodeConfig } from '../../config/index';
-import * as fs from 'fs-extra';
 import { prompt } from 'inquirer';
 import { ListrTask } from 'listr';
 import { PublicKey } from '@solana/web3.js';
 import { monitorSubscriptionPlanTask } from './controller';
-import { getProtocolState } from '../../connection/index';
+import { getSubscriptionPlanList } from './controller';
 
 const program = new Command();
 program.description('monitor subscription plans and trigger payments');
@@ -18,11 +17,10 @@ program.option(
 );
 program.option('-s, --single <type>', 'a subscription plan account public key');
 program.option('-, --debug', 'output extra debugging');
-
 const options = program.opts();
-
 const debug: boolean = options.debug;
-const tasks = new Listr([
+
+const preTasks = new Listr([
   {
     title: 'Checking configuration file',
     task: async (ctx) => {
@@ -46,28 +44,16 @@ const tasks = new Listr([
       ctx.registered = true;
     },
   },
+]);
+
+const monitorTasks = new Listr([
   {
     title: 'Getting subscription list to monitor',
-    enabled: (ctx) => ctx.registered,
     task: async (ctx) => {
-      const nodeConfig = ctx.config;
-      let subscriptionPlanList: PublicKey[] | undefined = undefined;
-      if (options.single) {
-        subscriptionPlanList = [new PublicKey(options.single.trim())];
-      } else if (options.list) {
-        const path: string = options.list.trim();
-        const fileExists = await fs.pathExists(path);
-        if (!fileExists) throw new Error(`File ${path} does not exist.`);
-        subscriptionPlanList = fs
-          .readFile(path)
-          .toString()
-          .split('\n')
-          .map((key) => new PublicKey(key));
-      } else {
-        const protocol = await getProtocolState(nodeConfig);
-        subscriptionPlanList = protocol.subscriptionPlanAccounts;
-      }
-      ctx.list = subscriptionPlanList;
+      ctx.list = await getSubscriptionPlanList(
+        options.single ? 'single' : options.list ? 'list' : 'all',
+        options.single ? options.single : options.list,
+      );
     },
   },
   {
@@ -83,7 +69,7 @@ const tasks = new Listr([
         (subscriptionPlan) =>
           monitorSubscriptionPlanTask(subscriptionPlan, nodeConfig, debug),
       );
-      return subscriptionPlanTaskList;
+      return new Listr(subscriptionPlanTaskList);
     },
   },
 ]);
@@ -109,8 +95,14 @@ const action = async () => {
       return;
     }
   }
+  await preTasks.run();
 
-  await tasks.run();
+  // monitor subscriptions continuously
+  const monitor = async () => {
+    await monitorTasks.run();
+    setTimeout(await monitor, 5000);
+  };
+  await monitor();
 };
 program
   .action(() => {
