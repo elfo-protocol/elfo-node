@@ -4,7 +4,6 @@ import { NodeConfig } from '../config';
 import { Connection, Keypair, PublicKey } from '@solana/web3.js';
 import { ENDPOINT } from './constants';
 import { registerNode, triggerPayment as trigger } from '@elfo/sdk';
-import { _initializeProtocol } from '@elfo/sdk';
 import { Subscription } from '@elfo/sdk';
 import { SubscriptionPlan } from '@elfo/sdk';
 import { ProtocolState } from '@elfo/sdk';
@@ -66,9 +65,4 @@ export const triggerPayment = async (
 ): Promise<void> => {
   const provider = await getProvider(config);
   await trigger(provider, subscriptin);
-};
-
-export const init = async (config: NodeConfig): Promise<void> => {
-  const provider = await getProvider(config);
-  await _initializeProtocol(provider);
 };
