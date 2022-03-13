@@ -1,71 +1,80 @@
-import { Command } from 'commander';
-import { configPathExists } from '../config/index';
-import Listr from 'listr';
-import { getConfig } from '../config/index';
-import { NodeConfig } from '../config/index';
-import { writeConfig } from '../config/index';
-import { register } from '../connection/index';
+import {Command, Flags} from '@oclif/core'
+import {configPathExists, NodeConfig} from '../config/index'
+import {getConfig} from '../config/index'
+import {writeConfig} from '../config/index'
+import {register} from '../connection/index'
+import {loading} from '../utils/index'
+import {error} from '../utils/index'
+import {success} from '../utils/index'
+import draftLog from '@elfo/draftlog'
 
-const program = new Command();
-program.description('register elfo node');
-program.option('-d, --debug', 'output extra debugging');
-program.option('-f, --force', 'force re-register');
+export default class Register extends Command {
+  static description = 'register subrina node'
 
-const options = program.opts();
+  static examples = [
+    '<%= config.bin %> <%= command.id %>',
+    '<%= config.bin %> <%= command.id %> --force',
+  ]
 
-const tasks = new Listr([
-  {
-    title: 'Checking configuration file',
-    task: async (ctx) => {
-      const configExists = configPathExists();
-      if (!configExists)
-        throw new Error(
-          'Elfo is not configured. Please run `elfo config` first.',
-        );
-      ctx.config = await getConfig();
-    },
-  },
-  {
-    title: 'Checking for existing node registration.',
-    enabled: (ctx) => ctx.config,
-    skip: options.force,
-    task: (ctx) => {
-      if (ctx.config.nodeAccount !== '')
-        throw new Error(
-          'Looks like you are already registered.\nTo override, run with `--force` flag.',
-        );
-      ctx.register = true;
-    },
-  },
-  {
-    title: 'Registering node',
-    enabled: (ctx) => ctx.register,
-    task: async (ctx) => {
-      const cnf = ctx.config as NodeConfig;
-      const node = await register(cnf);
-      cnf.nodeAccount = node.toBase58();
-      await writeConfig(cnf);
-    },
-  },
-]);
+  static flags = {
+    force: Flags.boolean({char: 'f', description: 'force re-register'}),
+    debug: Flags.boolean({
+      char: 'd',
+      hidden: true,
+      description: 'show debug info',
+    }),
+  }
 
-const action = async () => {
-  await tasks.run();
-};
-program
-  .action(() => {
-    action()
-      .then(() => {
-        console.log('Registration successful. ');
-        console.log(
-          'You can now monitor subscription plans, trigger payments and earn fees.',
-        );
-      })
-      .catch((e) => {
-        console.log('An error occurred.');
-        if (options.debug) {
-          console.error(e);
-        }
-      });
-  })
-  .parse();
+  static args = []
+
+  nodeConfig: NodeConfig | undefined = undefined;
+
+  public async run(): Promise<void> {
+    draftLog(console)
+    const {flags} = await this.parse(Register)
+
+    const configFileCheckLog = console.draft(loading(2, 'Checking configuration file.'))
+    const configDir = this.config.configDir
+    const configExists = configPathExists(configDir)
+    if (!configExists) {
+      configFileCheckLog(
+        error(2, 'Elfo is not configured. Please run `elfo config` first.'),
+      )
+      return
+    }
+
+    this.nodeConfig = await getConfig(configDir)
+    configFileCheckLog(success(2, 'Configuration file found.'))
+
+    const registerCheckLog = console.draft(loading(2, 'Checking if node is already registered.'))
+    if (this.nodeConfig.nodeAccount !== '' && !flags.force) {
+      registerCheckLog(error(2,
+        'Looks like you are already registered.\nTo override, run with `--force` flag.',
+      ))
+      return
+    }
+
+    registerCheckLog(loading(2,
+      'Registereing node.',
+    ))
+    registerCheckLog(loading(2,
+      'Registering node.',
+    ))
+
+    register(this.nodeConfig)
+    .then(node => {
+      this.nodeConfig!.nodeAccount = node
+      return writeConfig(this.nodeConfig!)
+    }).then(() => {
+      registerCheckLog(success(2,
+        'Node registered successfully.\nYou can now moniter subscription plans, trigger payments and earn fees.',
+      ))
+    }).catch(error_ => {
+      let errorMsg = 'Error occurred trying to register node'
+      if (flags.debug) errorMsg += (`\n ${error_}`)
+      registerCheckLog(error(2,
+        errorMsg,
+      ))
+    })
+  }
+}

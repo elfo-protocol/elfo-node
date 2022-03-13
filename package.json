@@ -1,67 +1,83 @@
 {
   "name": "@elfo/node",
-  "version": "0.0.4",
+  "version": "0.0.5",
+  "description": "Elfo Node CLI",
+  "author": "Irshad Nilam @irshadnilam",
   "bin": {
-    "elfo": "bin/run"
+    "elfo": "./bin/run"
   },
-  "description": "Elfo node CLI",
-  "engines": {
-    "node": ">= 16.13 <17"
-  },
-  "keywords": [
-    "elfo",
-    "solana",
-    "elfo node",
-    "solana subcriptions"
-  ],
-  "devDependencies": {
-    "@types/fs-extra": "^9.0.13",
-    "@types/inquirer": "^8.2.0",
-    "@types/jest": "~27.0.2",
-    "@types/listr": "^0.14.4",
-    "@types/node": "~16.11.6",
-    "@typescript-eslint/eslint-plugin": "~5.7.0",
-    "@typescript-eslint/parser": "~5.7.0",
-    "eslint": "~8.4.1",
-    "eslint-config-prettier": "~8.3.0",
-    "eslint-plugin-jest": "~25.3.0",
-    "jest": "~27.4.4",
-    "prettier": "~2.5.1",
-    "rimraf": "~3.0.2",
-    "ts-jest": "~27.1.1",
-    "tsutils": "~3.21.0",
-    "typescript": "~4.5.3"
-  },
+  "homepage": "https://github.com/elfo-protocol/elfo-node",
+  "license": "Apache2.0",
+  "main": "dist/index.js",
+  "repository": "elfo-protocol/elfo-node",
   "files": [
-    "dist"
+    "/bin",
+    "/dist",
+    "/npm-shrinkwrap.json",
+    "/oclif.manifest.json"
   ],
-  "scripts": {
-    "start": "node build/src/elfo.js",
-    "clean": "rimraf coverage build tmp",
-    "prebuild": "npm run lint",
-    "build": "tsc -p tsconfig.release.json",
-    "build:watch": "tsc -w -p tsconfig.release.json",
-    "lint": "eslint . --ext .ts,.tsx",
-    "test": "jest --coverage",
-    "test:watch": "jest --watch"
-  },
-  "author": "Irshad Nilam",
-  "license": "Apache-2.0",
   "dependencies": {
-    "@elfo/sdk": "^0.0.4",
+    "@elfo/draftlog": "^1.0.14",
+    "@elfo/sdk": "^0.0.5",
+    "@oclif/core": "^1.5.3",
     "@project-serum/anchor": "^0.22.1",
     "@solana/buffer-layout": "^4.0.0",
-    "@solana/web3.js": "^1.17.0",
+    "chalk": "4.1.2",
     "commander": "^9.0.0",
     "fs-extra": "^10.0.1",
     "inquirer": "^8.2.0",
-    "listr": "^0.14.3",
     "tslib": "~2.3.1"
   },
-  "publishConfig": {
-    "access": "public"
+  "devDependencies": {
+    "@oclif/test": "^2.1.0",
+    "@types/chai": "^4.3.0",
+    "@types/fs-extra": "^9.0.13",
+    "@types/inquirer": "^8.2.0",
+    "@types/mocha": "^9.0.0",
+    "@types/node": "^16.9.4",
+    "chai": "^4",
+    "eslint": "^7.32.0",
+    "eslint-config-oclif": "^4.0.0",
+    "eslint-config-oclif-typescript": "^1.0.2",
+    "globby": "^11",
+    "mocha": "^9",
+    "oclif": "^2.5.0",
+    "shx": "^0.3.3",
+    "ts-node": "^10.2.1",
+    "tslib": "^2.3.1",
+    "typescript": "^4.4.3"
   },
-  "volta": {
-    "node": "16.13.0"
-  }
+  "oclif": {
+    "bin": "elfo",
+    "dirname": "elfo",
+    "commands": "./dist/commands",
+    "plugins": [],
+    "topicSeparator": " ",
+    "topics": {
+      "hello": {
+        "description": "Say hello to the world and others"
+      }
+    }
+  },
+  "scripts": {
+    "build": "shx rm -rf dist && tsc -b",
+    "lint": "eslint . --ext .ts --config .eslintrc",
+    "postpack": "shx rm -f oclif.manifest.json",
+    "posttest": "yarn lint",
+    "prepack": "yarn build && oclif manifest && oclif readme",
+    "test": "mocha --forbid-only \"test/**/*.test.ts\"",
+    "version": "oclif readme && git add README.md"
+  },
+  "engines": {
+    "node": ">=12.0.0"
+  },
+  "bugs": "https://github.com/elfo-protocol/elfo-node/issues",
+  "keywords": [
+    "elfo",
+    "elfo-node",
+    "elfo-cli",
+    "solana",
+    "solana subscriptions"
+  ],
+  "types": "dist/index.d.ts"
 }

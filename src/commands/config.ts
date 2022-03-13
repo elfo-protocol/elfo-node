@@ -1,45 +1,37 @@
-import { Command } from 'commander';
-import { configPathExists } from '../config/index';
-import { prompt } from 'inquirer';
-import { runConfiguration } from '../config/index';
+import {Command} from '@oclif/core'
+import {configPathExists} from '../config/index'
+import {prompt} from 'inquirer'
+import {runConfiguration} from '../config/index'
 
-const program = new Command();
-program.description('configure elfo node');
-program.option('-d, --debug', 'output extra debugging');
-const options = program.opts();
+export default class Config extends Command {
+  static description = 'configure subrina node'
 
-const action = async () => {
-  const configExists = configPathExists();
+  static examples = [
+    '<%= config.bin %> <%= command.id %>',
+  ]
 
-  if (configExists) {
-    const answer = await prompt([
-      {
-        type: 'confirm',
-        name: 'rerun',
-        message:
-          'Config file already exists. Do you want to re-run configuration?',
-        default: false,
-      },
-    ]);
-    if (answer.rerun) {
-      await runConfiguration();
+  static flags = {}
+  static args = []
+
+  public async run(): Promise<void> {
+    const configDir = this.config.configDir
+    const configExists = configPathExists(configDir)
+
+    if (configExists) {
+      const answer = await prompt([
+        {
+          type: 'confirm',
+          name: 'rerun',
+          message:
+            'Config file already exists. Do you want to re-run configuration?',
+          default: false,
+        },
+      ])
+      if (answer.rerun) {
+        await runConfiguration(configDir)
+      }
+    } else {
+      await runConfiguration(configDir)
     }
-  } else {
-    await runConfiguration();
   }
-};
-
-program
-  .action(() => {
-    action()
-      .then(() => {
-        console.log(
-          'Configuration success. Run `elfo register` to register the node.',
-        );
-      })
-      .catch((e) => {
-        console.error('An error occurred.');
-        if (options.debug) console.error(e);
-      });
-  })
-  .parse();
+}
