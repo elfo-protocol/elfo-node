@@ -3,6 +3,7 @@ import {configPathExists} from '../config/index'
 import {getConfig} from '../config/index'
 import * as fs from 'fs-extra'
 import {prompt} from 'inquirer'
+import randomColor from 'randomcolor'
 import {NodeConfig} from '../config/index'
 import {getProtocolState} from '../connection/index'
 import {getSubscriptionPlan} from '../connection/index'
@@ -13,6 +14,14 @@ import {error} from '../utils/index'
 import {success} from '../utils/index'
 import {skip} from '../utils/index'
 import {loading} from '../utils/index'
+import chalk from 'chalk'
+import {indent} from '../utils/index'
+import {LOG_SKIP_SYMBOL} from '../utils/index'
+import {LOG_ERROR_SYMBOL} from '../utils/index'
+import {LOG_LOADING_SYMBOL} from '../utils/index'
+import {SubscriptionPlan} from '@elfo/sdk'
+import {shorten} from '../utils/index'
+import {LOG_SUCCESS_SYMBOL} from '../utils/index'
 
 export default class Monitor extends Command {
   static description = 'monitor subscription plans and trigger payments'
@@ -51,7 +60,7 @@ export default class Monitor extends Command {
     const {flags} = await this.parse(Monitor)
 
     if (flags.list && flags.single) {
-      console.log('use only one of the --list or --single flags')
+      console.log(error(0, 'use only one of the --list or --single flags'))
       return
     }
 
@@ -71,11 +80,17 @@ export default class Monitor extends Command {
       }
     }
 
-    await this.runPreTasks()
-    await this.runMonitorTasks(flags)
+    if (!await this.checkPreConditions()) return
+
+    const monitorPlans = async () => {
+      await this.runMonitorTasks(flags)
+      setTimeout(monitorPlans, 5000)
+    }
+
+    await monitorPlans()
   }
 
-  private async runPreTasks(): Promise<void> {
+  private async checkPreConditions(): Promise<boolean> {
     const configFileCheckLog = console.draft(loading(2, 'Checking configuration file.'))
     const configDir = this.config.configDir
     const configExists = configPathExists(configDir)
@@ -83,7 +98,7 @@ export default class Monitor extends Command {
       configFileCheckLog(
         error(2, 'Elfo is not configured. Please run `elfo config` first.'),
       )
-      return
+      return false
     }
 
     this.nodeConfig = await getConfig(configDir)
@@ -95,10 +110,11 @@ export default class Monitor extends Command {
       registerCheckLog(
         error(2, 'Your node is not registered. Please run `register` command first.'),
       )
-      return
+      return false
     }
 
     registerCheckLog(success(2, 'Node is registered.'))
+    return true
   }
 
   private async runMonitorTasks(flags: { list: string | undefined; single: string | undefined; debug: boolean } & { json: boolean | undefined }): Promise<void> {
@@ -121,14 +137,16 @@ export default class Monitor extends Command {
     type: 'single' | 'list' | 'all',
     value: string | undefined,
   ): Promise<string[]> {
-    if (type === 'single' && !this.subscriptionPlanList) {
+    if (this.subscriptionPlanList && type !== 'all') return this.subscriptionPlanList
+
+    if (type === 'single') {
       this.subscriptionPlanList = [value as string]
-    } else if (type === 'list' && !this.subscriptionPlanList) {
+    } else if (type === 'list') {
       const fileExists = await fs.pathExists(value as string)
       if (!fileExists) throw new Error(`File ${value} does not exist.`)
       this.subscriptionPlanList = fs
-      .readFile(value as string)
-      .toString()
+      .readFileSync(value as string)
+      .toString().trim()
       .split('\n')
       .map(key => key)
     } else {
@@ -140,7 +158,9 @@ export default class Monitor extends Command {
   }
 
   private monitorSubscriptionPlan(subscriptionPlanKey: string, debug: boolean) {
-    const planLog = console.draft(loading(4, `Plan: ${subscriptionPlanKey}`))
+    const color = randomColor({
+      luminosity: 'dark',
+    })
     const nodeConfig = this.nodeConfig as NodeConfig
 
     getSubscriptionPlan(
@@ -149,51 +169,52 @@ export default class Monitor extends Command {
     ).then(subscriptionPlanAccount => {
       const subscriptionList = subscriptionPlanAccount.subscriptionAccounts
       if (subscriptionList.length === 0) {
-        planLog(
-          skip(4, `Plan: ${subscriptionPlanKey} (${subscriptionPlanAccount!.planName}) - No subscriptions in plan, Skipping.`),
+        console.log(
+          skip(4, `Plan: ${shorten(subscriptionPlanKey)} (${subscriptionPlanAccount!.planName}) - No subscriptions in plan, Skipping.`),
         )
         return
       }
 
-      for (const subscription of subscriptionList)  this.monitorSubscription(subscription, debug)
+      for (const subscription of subscriptionList)  this.monitorSubscription(subscription, subscriptionPlanAccount, debug, color)
     }).catch(error_ => {
-      let errorMsg = `Plan: ${subscriptionPlanKey} - Error occurred trying to retrieve subscription plan`
+      let errorMsg = `Plan: ${shorten(subscriptionPlanKey)} - Error occurred trying to retrieve subscription plan`
       if (debug) errorMsg += (`\n ${error_}`)
-      planLog(error(4, errorMsg))
+      console.log(error(4, errorMsg))
     })
   }
 
-  private monitorSubscription(subscriptionKey: string, debug: boolean) {
+  private monitorSubscription(subscriptionKey: string, subscriptionPlanAccount: SubscriptionPlan, debug: boolean, color: string) {
+    const preText = (symbol: string) => chalk.hex(color)(`${symbol} Plan: ${shorten(subscriptionPlanAccount.publicKey)} (${subscriptionPlanAccount.planName}) - `)
     const nodeConfig = this.nodeConfig as NodeConfig
-    const subscriptionLog = console.draft(loading(6, `Subscription: ${subscriptionKey}`))
+    const subscriptionLog = console.draft(indent(4, preText(LOG_LOADING_SYMBOL) + (`Subscription: ${shorten(subscriptionKey)}`)))
 
     getSubscription(
       nodeConfig,
       subscriptionKey,
     ).then(subscriptionAccount => {
       if (!subscriptionAccount!.isActive) {
-        subscriptionLog(skip(6, `Subscription: ${subscriptionKey} - INACTIVE, skipping`))
+        subscriptionLog(indent(4, preText(LOG_SKIP_SYMBOL) + (chalk.gray(`Subscription: ${shorten(subscriptionKey)} - INACTIVE, skipping`))))
         return
       }
 
       const currentTimestamp = Math.round(Date.now() / 1000)
       if (subscriptionAccount!.nextPaymentTimestamp > currentTimestamp) {
-        subscriptionLog(skip(6, `Subscription: ${subscriptionKey} - Next billing timestamp is not reached, skipping`))
+        subscriptionLog(indent(4, preText(LOG_SKIP_SYMBOL) + (chalk.gray(`Subscription: ${shorten(subscriptionKey)} - Next Billing not reached.`))))
         return
       }
 
       triggerPayment(nodeConfig, subscriptionKey)
       .then(() => {
-        subscriptionLog(success(6, `Subscription: ${subscriptionKey} - SUCCESS`))
+        subscriptionLog(indent(4, preText(LOG_SUCCESS_SYMBOL) + (chalk.green(`Subscription: ${shorten(subscriptionKey)} - SUCCESS.`))))
       }).catch(error_ => {
-        let errorMsg = `Subscription: ${subscriptionKey} - Error occurred trying to trigger payment.}`
+        let errorMsg = `Subscription: ${shorten(subscriptionKey)} - Error occurred trying to trigger payment.}`
         if (debug) errorMsg += (`\n ${error_}`)
-        subscriptionLog(error(6, errorMsg))
+        subscriptionLog(indent(4, preText(LOG_ERROR_SYMBOL) + (chalk.red(`${errorMsg}`))))
       })
     }).catch(error_ => {
-      let errorMsg = `Subscription: ${subscriptionKey} - Error occurred trying to retrieve subscription account}`
+      let errorMsg = `Subscription: ${shorten(subscriptionKey)} - Error occurred trying to retrieve subscription account}`
       if (debug) errorMsg += (`\n ${error_}`)
-      subscriptionLog(error(6, errorMsg))
+      subscriptionLog(indent(4, preText(LOG_ERROR_SYMBOL) + (chalk.red(`${errorMsg}`))))
     })
   }
 }

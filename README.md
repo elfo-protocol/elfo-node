@@ -40,7 +40,7 @@ $ npm install -g @elfo/node
 $ elfo COMMAND
 running command...
 $ elfo (--version)
-@elfo/node/0.0.0 linux-x64 node-v16.14.0
+@elfo/node/0.0.5 linux-x64 node-v16.14.0
 $ elfo --help [COMMAND]
 USAGE
   $ elfo COMMAND
@@ -68,7 +68,7 @@ EXAMPLES
   $ elfo config
 ```
 
-_See code: [dist/commands/config.ts](https://github.com/elfo-protocol/elfo-node/blob/v0.0.0/dist/commands/config.ts)_
+_See code: [dist/commands/config.ts](https://github.com/elfo-protocol/elfo-node/blob/v0.0.5/dist/commands/config.ts)_
 
 ## `elfo monitor`
 
@@ -93,7 +93,7 @@ EXAMPLES
   $ elfo monitor
 ```
 
-_See code: [dist/commands/monitor.ts](https://github.com/elfo-protocol/elfo-node/blob/v0.0.0/dist/commands/monitor.ts)_
+_See code: [dist/commands/monitor.ts](https://github.com/elfo-protocol/elfo-node/blob/v0.0.5/dist/commands/monitor.ts)_
 
 ## `elfo register`
 
@@ -115,5 +115,5 @@ EXAMPLES
   $ elfo register --force
 ```
 
-_See code: [dist/commands/register.ts](https://github.com/elfo-protocol/elfo-node/blob/v0.0.0/dist/commands/register.ts)_
+_See code: [dist/commands/register.ts](https://github.com/elfo-protocol/elfo-node/blob/v0.0.5/dist/commands/register.ts)_
 <!-- commandsstop -->

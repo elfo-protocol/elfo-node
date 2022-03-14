@@ -55,9 +55,6 @@ export default class Register extends Command {
     }
 
     registerCheckLog(loading(2,
-      'Registereing node.',
-    ))
-    registerCheckLog(loading(2,
       'Registering node.',
     ))
 
@@ -67,7 +64,7 @@ export default class Register extends Command {
       return writeConfig(this.nodeConfig!)
     }).then(() => {
       registerCheckLog(success(2,
-        'Node registered successfully.\nYou can now moniter subscription plans, trigger payments and earn fees.',
+        'Node registered successfully.\nYou can now monitor subscription plans, trigger payments and earn fees.',
       ))
     }).catch(error_ => {
       let errorMsg = 'Error occurred trying to register node'
