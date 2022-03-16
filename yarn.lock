@@ -241,10 +241,10 @@
   resolved "https://registry.yarnpkg.com/@elfo/draftlog/-/draftlog-1.0.14.tgz#70a780fcf6063f11f9d8a3336220518e20522be0"
   integrity sha512-Ly0sJIsQH+XUo7YvHmly05l9DjkcPS/XZZ4cFTx5M2fTRa8E/mqSmOfPOXWKMxLUytrSFGNfdS1DjdyeByky5g==
 
-"@elfo/sdk@^0.0.5":
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/@elfo/sdk/-/sdk-0.0.5.tgz#5240daf3dab0b0f7c406e5fd66a6a88a99def20a"
-  integrity sha512-JTo6n1Wz5WgROtP6Sp+dzrgyn3PMpwAV8bgFXzEVEJzuK1Sf/WFDTU146jDhJ2KDDKzraTJx+GZztrxGVLIvUQ==
+"@elfo/sdk@^0.0.6":
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/@elfo/sdk/-/sdk-0.0.6.tgz#155004ea9b6542a57bd2be2e7666121a1b5c618b"
+  integrity sha512-cN4DtH6Y71KMvr25ZffAOfW3x3HWHIRdp6HskbS5/UUeSiUIFa2dgiRBezQMaK2vCdo3+VJTrIo6/Kn3Vq7ICQ==
   dependencies:
     "@project-serum/anchor" "^0.22.1"
     "@solana/spl-token" "^0.2.0"
