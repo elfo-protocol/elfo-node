@@ -40,18 +40,19 @@ $ npm install -g @elfo/node
 $ elfo COMMAND
 running command...
 $ elfo (--version)
-@elfo/node/0.0.5 linux-x64 node-v16.14.0
+@elfo/node/0.0.6 linux-x64 node-v16.14.0
 $ elfo --help [COMMAND]
 USAGE
   $ elfo COMMAND
 ...
 ```
+![installation](./img/install-elfo.gif "Installing Elfo")
 <!-- usagestop -->
 ## Commands
 <!-- commands -->
 * [`elfo config`](#elfo-config)
-* [`elfo monitor`](#elfo-monitor)
 * [`elfo register`](#elfo-register)
+* [`elfo monitor`](#elfo-monitor)
 
 ## `elfo config`
 
@@ -67,8 +68,30 @@ DESCRIPTION
 EXAMPLES
   $ elfo config
 ```
+![configuration](./img/config-elfo.gif "Configuring Elfo")
+_See code: [dist/commands/config.ts](https://github.com/elfo-protocol/elfo-node/blob/v0.0.6/dist/commands/config.ts)_
 
-_See code: [dist/commands/config.ts](https://github.com/elfo-protocol/elfo-node/blob/v0.0.5/dist/commands/config.ts)_
+## `elfo register`
+
+register subrina node
+
+```
+USAGE
+  $ elfo register [-f]
+
+FLAGS
+  -f, --force  force re-register
+
+DESCRIPTION
+  register subrina node
+
+EXAMPLES
+  $ elfo register
+
+  $ elfo register --force
+```
+![registration](./img/register-elfo.gif "Registering elfo")
+_See code: [dist/commands/register.ts](https://github.com/elfo-protocol/elfo-node/blob/v0.0.6/dist/commands/register.ts)_
 
 ## `elfo monitor`
 
@@ -92,28 +115,7 @@ EXAMPLES
 
   $ elfo monitor
 ```
+![monitor](./img/monitor-elfo.gif "Monitor subscriptions")
+_See code: [dist/commands/monitor.ts](https://github.com/elfo-protocol/elfo-node/blob/v0.0.6/dist/commands/monitor.ts)_
 
-_See code: [dist/commands/monitor.ts](https://github.com/elfo-protocol/elfo-node/blob/v0.0.5/dist/commands/monitor.ts)_
-
-## `elfo register`
-
-register subrina node
-
-```
-USAGE
-  $ elfo register [-f]
-
-FLAGS
-  -f, --force  force re-register
-
-DESCRIPTION
-  register subrina node
-
-EXAMPLES
-  $ elfo register
-
-  $ elfo register --force
-```
-
-_See code: [dist/commands/register.ts](https://github.com/elfo-protocol/elfo-node/blob/v0.0.5/dist/commands/register.ts)_
 <!-- commandsstop -->
