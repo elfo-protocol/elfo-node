@@ -10,7 +10,7 @@
   <p>
     <a href="https://github.com/elfo-protocol/elfo-sdk"><img alt="Tutorials" src="https://img.shields.io/badge/sdk-javascript-informational" /></a>
     <a href="https://discord.gg/QT3WgFrC"><img alt="Discord Chat" src="https://img.shields.io/discord/951843923649769522?color=yellowgreen" /></a>
-    <a href="https://opensource.org/licenses/Apache-2.0"><img alt="License" src="https://img.shields.io/github/license/elfo-protocol/elfo-core?color=blueviolet" /></a>
+    <a href="https://opensource.org/licenses/Apache-2.0"><img alt="License" src="https://img.shields.io/github/license/elfo-protocol/elfo-node?color=blueviolet" /></a>
   </p>
 </div>
 
@@ -56,14 +56,14 @@ USAGE
 
 ## `elfo config`
 
-configure subrina node
+configure elfo node
 
 ```
 USAGE
   $ elfo config
 
 DESCRIPTION
-  configure subrina node
+  configure elfo node
 
 EXAMPLES
   $ elfo config
@@ -73,7 +73,7 @@ _See code: [dist/commands/config.ts](https://github.com/elfo-protocol/elfo-node/
 
 ## `elfo register`
 
-register subrina node
+register elfo node
 
 ```
 USAGE
@@ -83,7 +83,7 @@ FLAGS
   -f, --force  force re-register
 
 DESCRIPTION
-  register subrina node
+  register elfo node
 
 EXAMPLES
   $ elfo register
