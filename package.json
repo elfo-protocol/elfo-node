@@ -24,7 +24,7 @@
     "@solana/buffer-layout": "^4.0.0",
     "@types/randomcolor": "^0.5.6",
     "chalk": "4.1.2",
-    "commander": "^9.0.0",
+    "commander": "^9.4.1",
     "fs-extra": "^10.0.1",
     "inquirer": "^8.2.0",
     "randomcolor": "^0.6.2",
